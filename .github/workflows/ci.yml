@@ -74,7 +74,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
-      - uses: austenstone/.github/.github/actions/npm-ci-cache@main
+      # - uses: austenstone/.github/.github/actions/npm-ci-cache@main
+      - run: npm ci
       - run: ng test --watch=false --browsers=ChromeHeadless
     
   docs:
