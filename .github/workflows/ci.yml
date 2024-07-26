@@ -49,14 +49,11 @@ jobs:
     permissions:
       contents: read
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [22.x]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
+          node-version: 22.x
           cache: 'npm'
       - uses: austenstone/.github/.github/actions/npm-ci-cache@main
       - run: npm run lint
@@ -74,9 +71,8 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
-      # - uses: austenstone/.github/.github/actions/npm-ci-cache@main
-      - run: npm ci
-      - run: ng test --watch=false --browsers=ChromeHeadless
+      - uses: austenstone/.github/.github/actions/npm-ci-cache@main
+      - run: npm run test -- --watch=false --browsers=ChromeHeadless
     
   docs:
     permissions:
