@@ -1,0 +1,43 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    # permissions:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node: [16.x, 18.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+      - uses: austenstone/.github/.github/actions/npm-ci-cache@main
+      - run: npm run build
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: dist
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+      - run: gh ext install advanced-security/gh-sbom
+      - run: gh sbom | jq > sbom.json # SPDX
+      # - run: gh sbom -c -l | jq > sbom.json # CycloneDX
+      - name: Generate SBOM attestation
+        uses: actions/attest-sbom@v1
+        with:
+          subject-path: dist
+          sbom-path: sbom.json
+      - run: gh attestation verify dist -R ${{ github.repository }}
