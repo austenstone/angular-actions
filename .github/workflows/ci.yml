@@ -44,6 +44,10 @@ jobs:
         with:
           subject-path: dist
           sbom-path: sbom.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.json
   
   lint:
     permissions:
