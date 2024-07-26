@@ -22,8 +22,8 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
@@ -46,3 +46,21 @@ jobs:
           subject-path: dist
           sbom-path: sbom.json
       - run: gh attestation verify dist/index.html -R ${{ github.repository }}
+  test:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+      
+    strategy:
+      matrix:
+        node: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+      - uses: austenstone/.github/.github/actions/npm-ci-cache@main
+      - run: npm test
