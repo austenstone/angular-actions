@@ -45,4 +45,4 @@ jobs:
         with:
           subject-path: dist
           sbom-path: sbom.json
-      - run: gh attestation verify dist -R ${{ github.repository }}
+      - run: gh attestation verify dist/index.html -R ${{ github.repository }}
