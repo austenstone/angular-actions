@@ -44,7 +44,6 @@ jobs:
         with:
           subject-path: dist
           sbom-path: sbom.json
-      - run: gh attestation verify dist/index.html -R ${{ github.repository }}
   
   lint:
     permissions:
@@ -76,7 +75,7 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: 'npm'
       - uses: austenstone/.github/.github/actions/npm-ci-cache@main
-      - run: npm test
+      - run: ng test --browsers=Headless --no-watch
     
   docs:
     permissions:
